@@ -42,8 +42,25 @@ public class ParkingLotSystemTest {
     public void givenAVehicle_WantToUnpark_ShouldReturnTrue() {
         parkingLotManagementSystem.toPark(vehicle);
         parkingLotManagementSystem.toUnpark(vehicle);
-        boolean toUnpark = parkingLotManagementSystem.checkIfUnParked();
-        Assert.assertTrue(toUnpark);
+        boolean toUnpark = false;
+        try {
+            toUnpark = parkingLotManagementSystem.checkIfUnParked();
+            Assert.assertTrue(toUnpark);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+
     }
 
+    @Test
+    public void givenAVehicle_WantToUnpark_ButCouldNotUnpark_ShouldThrowException() {
+        parkingLotManagementSystem.toPark(vehicle);
+        parkingLotManagementSystem.toUnpark(new Object());
+        try {
+            boolean checkIfUnParked = parkingLotManagementSystem.checkIfUnParked();
+            Assert.assertTrue(checkIfUnParked);
+        } catch (ParkingLotException e) {
+            Assert.assertEquals(ParkingLotException.ExceptionType.NOT_UNPARKED, e.type);
+        }
+    }
 }
