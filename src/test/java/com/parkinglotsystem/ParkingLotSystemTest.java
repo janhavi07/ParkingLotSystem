@@ -135,6 +135,37 @@ public class ParkingLotSystemTest {
             Assert.assertFalse(securityPerson.checkAvailability() && parkingLotOwner.checkAvailability());
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void givenAParkingSlot_WhenGivenMultipleVehicles_ShouldParkThem() {
+        Object vehicle2=new Object();
+        Object vehicle3=new Object();
+        parkingLotManagementSystem.setTotalSlots(5);
+        parkingLotManagementSystem.toPark(vehicle);
+        parkingLotManagementSystem.toPark(vehicle2);
+        parkingLotManagementSystem.toPark(vehicle3);
+        try {
+            boolean checkIfParked = parkingLotManagementSystem.checkIfParked();
+            Assert.assertTrue(checkIfParked);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenAParkingSlot_WhenGivenMultipleVehicles_MoreThanItsCapacity_ShouldThrowException() {
+        parkingLotManagementSystem.setTotalSlots(2);
+        Object vehicle2=new Object();
+        Object vehicle3=new Object();
+        parkingLotManagementSystem.toPark(vehicle);
+        parkingLotManagementSystem.toPark(vehicle2);
+        parkingLotManagementSystem.toPark(vehicle3);
+        try {
+            parkingLotManagementSystem.checkIfParked();
+        } catch (ParkingLotException e) {
+            Assert.assertEquals(ParkingLotException.ExceptionType.SLOTS_FULL,e.type);
+        }
 
     }
 }

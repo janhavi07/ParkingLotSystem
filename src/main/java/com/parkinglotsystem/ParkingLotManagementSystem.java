@@ -5,35 +5,37 @@ import java.util.List;
 
 public class ParkingLotManagementSystem {
 
-    private final int actualCapacity;
+    private int actualCapacity;
     public List<ParkingLotObserver> observerList;
     private int currentCapacity;
     private Object vehicle;
     private ParkingLotOwner owner;
     private SecurityPerson security;
     private ParkingLotObserver observer;
+    public List vehicleList;
 
 
     public ParkingLotManagementSystem(int capacityOfParkingLot) {
         this.actualCapacity = capacityOfParkingLot;
         this.currentCapacity = 0;
         this.observerList = new ArrayList<>();
+        this.vehicleList=new ArrayList();
     }
 
     public void toPark(Object vehicle) {
-        this.vehicle = vehicle;
+        this.vehicleList.add(vehicle);
         this.currentCapacity++;
     }
 
     public void toUnpark(Object vehicle) {
-        if (this.vehicle.equals(vehicle)) {
-            this.vehicle = null;
-            this.currentCapacity--;
+        if (this.vehicleList.contains(vehicle)) {
+            this.vehicleList.remove(vehicle);
+            //this.currentCapacity--;
         }
     }
 
     public boolean checkIfParked() throws ParkingLotException {
-        if (this.actualCapacity == this.currentCapacity) {
+        if (this.actualCapacity == vehicleList.size()) {
             for (ParkingLotObserver observer : observerList)
                 observer.slotsAreFull();
             throw new ParkingLotException("Could'nt park", ParkingLotException.ExceptionType.SLOTS_FULL);
@@ -42,7 +44,7 @@ public class ParkingLotManagementSystem {
     }
 
     public boolean checkIfUnParked() throws ParkingLotException {
-        if (this.vehicle == null) {
+        if (this.vehicleList.size() < this.actualCapacity) {
             for (ParkingLotObserver observer : observerList)
                 observer.slotsAreEmpty();
             return true;
@@ -52,5 +54,9 @@ public class ParkingLotManagementSystem {
 
     public void registerObserver(ParkingLotObserver observer) {
         observerList.add(observer);
+    }
+
+    public void setTotalSlots(int totalSlots) {
+        this.actualCapacity=totalSlots;
     }
 }
