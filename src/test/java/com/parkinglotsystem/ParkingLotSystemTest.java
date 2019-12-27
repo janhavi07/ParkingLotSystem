@@ -20,7 +20,7 @@ public class ParkingLotSystemTest {
         parkingLotOwner = new ParkingLotOwner();
         securityPerson = new SecurityPerson();
         observer1 = new ParkingLotOwner();
-        observer2=new SecurityPerson();
+        observer2 = new SecurityPerson();
 
     }
 
@@ -89,9 +89,10 @@ public class ParkingLotSystemTest {
         parkingLotManagementSystem.toPark(vehicle);
         try {
             parkingLotManagementSystem.checkIfParked();
-            boolean checkIfFull = parkingLotOwner.checkIfFull();
+            boolean checkIfFull = parkingLotOwner.checkAvailability();
             Assert.assertTrue(checkIfFull);
-        } catch (ParkingLotException e) { }
+        } catch (ParkingLotException e) {
+        }
 
     }
 
@@ -101,9 +102,10 @@ public class ParkingLotSystemTest {
         parkingLotManagementSystem.toPark(vehicle);
         try {
             parkingLotManagementSystem.checkIfParked();
-            boolean checkIfFull = securityPerson.checkIfFull();
+            boolean checkIfFull = securityPerson.checkAvailability();
             Assert.assertTrue(checkIfFull);
-        } catch (ParkingLotException e) { }
+        } catch (ParkingLotException e) {
+        }
 
     }
 
@@ -114,10 +116,24 @@ public class ParkingLotSystemTest {
         parkingLotManagementSystem.toPark(vehicle);
         try {
             parkingLotManagementSystem.checkIfParked();
-            boolean checkIfFull = securityPerson.checkIfFull();
-            boolean checkIfFull1 = parkingLotOwner.checkIfFull();
-            Assert.assertTrue(checkIfFull && checkIfFull1 );
+            boolean checkIfFull = securityPerson.checkAvailability();
+            boolean checkIfFull1 = parkingLotOwner.checkAvailability();
+            Assert.assertTrue(checkIfFull && checkIfFull1);
         } catch (ParkingLotException e) {
+        }
+    }
+
+    @Test
+    public void givenAParkingSlot_WhenEmpty_ShouldInformBothTheObservers() {
+        parkingLotManagementSystem.registerObserver(observer2);
+        parkingLotManagementSystem.registerObserver(observer1);
+        parkingLotManagementSystem.toPark(vehicle);
+        parkingLotManagementSystem.toUnpark(vehicle);
+        try {
+            parkingLotManagementSystem.checkIfUnParked();
+        } catch (ParkingLotException e) {
+            Assert.assertFalse(securityPerson.checkAvailability() && parkingLotOwner.checkAvailability());
+            e.printStackTrace();
         }
 
     }

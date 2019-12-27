@@ -13,6 +13,7 @@ public class ParkingLotManagementSystem {
     private SecurityPerson security;
     private ParkingLotObserver observer;
 
+
     public ParkingLotManagementSystem(int capacityOfParkingLot) {
         this.actualCapacity = capacityOfParkingLot;
         this.currentCapacity = 0;
@@ -41,8 +42,11 @@ public class ParkingLotManagementSystem {
     }
 
     public boolean checkIfUnParked() throws ParkingLotException {
-        if (this.vehicle == null)
+        if (this.vehicle == null) {
+            for (ParkingLotObserver observer : observerList)
+                observer.slotsAreEmpty();
             return true;
+        }
         throw new ParkingLotException("Could'nt unpark", ParkingLotException.ExceptionType.NOT_UNPARKED);
     }
 

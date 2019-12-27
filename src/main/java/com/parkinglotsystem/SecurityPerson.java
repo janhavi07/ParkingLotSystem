@@ -9,7 +9,12 @@ public class SecurityPerson implements ParkingLotObserver {
         this.slotFull = true;
     }
 
-    public boolean checkIfFull() {
+    @Override
+    public void slotsAreEmpty() {
+        this.slotFull = false;
+    }
+
+    public boolean checkAvailability() {
         return this.slotFull;
     }
 }

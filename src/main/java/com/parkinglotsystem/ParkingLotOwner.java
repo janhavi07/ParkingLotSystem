@@ -9,7 +9,12 @@ public class ParkingLotOwner implements ParkingLotObserver {
         this.slotsFull = true;
     }
 
-    public boolean checkIfFull() {
+    @Override
+    public void slotsAreEmpty() {
+        this.slotsFull = false;
+    }
+
+    public boolean checkAvailability() {
         return slotsFull;
     }
 }
