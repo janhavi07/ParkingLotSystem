@@ -14,10 +14,10 @@ public class ParkingLotManagementSystem {
         }
     }
 
-    public boolean checkIfParked() {
+    public boolean checkIfParked() throws ParkingLotException {
         if(this.vehicle != null)
             return true;
-        return false;
+        throw new ParkingLotException("Could'nt park",ParkingLotException.ExceptionType.NOT_PARKED);
     }
 
     public boolean checkIfUnParked() {
