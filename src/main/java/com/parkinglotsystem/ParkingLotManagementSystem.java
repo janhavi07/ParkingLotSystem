@@ -6,6 +6,7 @@ public class ParkingLotManagementSystem {
     private int currentCapacity;
     private Object vehicle;
     private ParkingLotOwner owner;
+    private SecurityPerson security;
 
     public ParkingLotManagementSystem(int capacityOfParkingLot) {
         this.actualCapacity = capacityOfParkingLot;
@@ -27,6 +28,7 @@ public class ParkingLotManagementSystem {
     public boolean checkIfParked() throws ParkingLotException {
         if (this.actualCapacity == this.currentCapacity) {
             this.owner.slotsAreFull();
+            this.security.slotsAreFull();
             throw new ParkingLotException("Could'nt park", ParkingLotException.ExceptionType.SLOTS_FULL);
         }
         return true;
@@ -41,6 +43,9 @@ public class ParkingLotManagementSystem {
 
     public void registerOwner(ParkingLotOwner parkingLotOwner) {
      this.owner=parkingLotOwner;
+    }
 
+    public void registerSecurity(SecurityPerson securityPerson) {
+        this.security=securityPerson;
     }
 }

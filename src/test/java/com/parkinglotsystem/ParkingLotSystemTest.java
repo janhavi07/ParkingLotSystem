@@ -9,12 +9,14 @@ public class ParkingLotSystemTest {
     ParkingLotManagementSystem parkingLotManagementSystem;
     Object vehicle;
     ParkingLotOwner parkingLotOwner;
+    SecurityPerson securityPerson;
 
     @Before
     public void setUp() throws Exception {
         parkingLotManagementSystem = new ParkingLotManagementSystem(1);
         vehicle = new Object();
         parkingLotOwner = new ParkingLotOwner();
+        securityPerson = new SecurityPerson();
 
     }
 
@@ -22,6 +24,7 @@ public class ParkingLotSystemTest {
     public void givenAVehicle_WantToPark_ShouldReturnTrue() {
         parkingLotManagementSystem.toPark(vehicle);
         parkingLotManagementSystem.registerOwner(parkingLotOwner);
+        parkingLotManagementSystem.registerSecurity(securityPerson);
         boolean toPark = false;
         try {
             toPark = parkingLotManagementSystem.checkIfParked();
@@ -34,6 +37,7 @@ public class ParkingLotSystemTest {
     public void givenAVehicle_AsNullToPark_ShouldThrowException() {
         parkingLotManagementSystem.toPark(vehicle);
         parkingLotManagementSystem.registerOwner(parkingLotOwner);
+        parkingLotManagementSystem.registerSecurity(securityPerson);
         try {
             boolean checkIfParked = parkingLotManagementSystem.checkIfParked();
             Assert.assertTrue(checkIfParked);
@@ -80,14 +84,26 @@ public class ParkingLotSystemTest {
     }
 
     @Test
-    public void givenAParkingLot_WhenFull_ShouldInformTheOwner() {
+    public void givenAParkingSlot_WhenFull_ShouldInformTheOwner() {
         parkingLotManagementSystem.registerOwner(parkingLotOwner);
         parkingLotManagementSystem.toPark(vehicle);
+        parkingLotManagementSystem.registerSecurity(securityPerson);
         try {
             parkingLotManagementSystem.checkIfParked();
         } catch (ParkingLotException e) { }
         boolean checkIfFull = parkingLotOwner.checkIfFull();
         Assert.assertTrue(checkIfFull);
+    }
 
+    @Test
+    public void givenAParkingSlot_WhenFull_ShouldInformTheSecurityDepartment() {
+        parkingLotManagementSystem.registerOwner(parkingLotOwner);
+        parkingLotManagementSystem.registerSecurity(securityPerson);
+        parkingLotManagementSystem.toPark(vehicle);
+        try {
+            parkingLotManagementSystem.checkIfParked();
+        } catch (ParkingLotException e) {}
+            boolean checkIfFull = securityPerson.checkIfFull();
+            Assert.assertTrue(checkIfFull);
     }
 }
