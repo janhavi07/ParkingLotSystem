@@ -1,14 +1,15 @@
 package com.parkinglotsystem;
 
-public class ParkingLotOwner {
+public class ParkingLotOwner implements ParkingLotObserver {
 
     private boolean slotsFull;
 
+    @Override
     public void slotsAreFull() {
-        this.slotsFull=true;
+        this.slotsFull = true;
     }
 
-    public boolean checkIfFull(){
+    public boolean checkIfFull() {
         return slotsFull;
     }
 }
