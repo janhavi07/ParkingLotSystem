@@ -16,14 +16,17 @@ public class ParkingLotSystemTest {
 
     @Test
     public void givenAVehicle_WantToPark_ShouldReturnTrue() {
-        boolean toPark = parkingLotManagementSystem.toPark(new Object());
+        parkingLotManagementSystem.toPark(new Object());
+        boolean toPark = parkingLotManagementSystem.checkIfParked();
         Assert.assertTrue(toPark);
     }
 
     @Test
     public void givenAVehicle_WantToUnpark_ShouldReturnTrue() {
         parkingLotManagementSystem.toPark(vehicle);
-        boolean toUnpark = parkingLotManagementSystem.toUnpark(vehicle);
+        parkingLotManagementSystem.toUnpark(vehicle);
+        boolean toUnpark = parkingLotManagementSystem.checkIfUnParked();
         Assert.assertTrue(toUnpark);
     }
+
 }
