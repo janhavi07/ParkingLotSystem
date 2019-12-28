@@ -21,7 +21,6 @@ public class ParkingLotSystemTest {
         securityPerson = new SecurityPerson();
         observer1 = new ParkingLotOwner();
         observer2 = new SecurityPerson();
-
     }
 
     @Test
@@ -56,7 +55,6 @@ public class ParkingLotSystemTest {
         } catch (ParkingLotException e) {
             e.printStackTrace();
         }
-
     }
 
     @Test
@@ -131,16 +129,16 @@ public class ParkingLotSystemTest {
         parkingLotManagementSystem.toUnpark(vehicle);
         try {
             parkingLotManagementSystem.checkIfUnParked();
-        } catch (ParkingLotException e) {
             Assert.assertFalse(securityPerson.checkAvailability() && parkingLotOwner.checkAvailability());
+        } catch (ParkingLotException e) {
             e.printStackTrace();
         }
     }
 
     @Test
     public void givenAParkingSlot_WhenGivenMultipleVehicles_ShouldParkThem() {
-        Object vehicle2=new Object();
-        Object vehicle3=new Object();
+        Object vehicle2 = new Object();
+        Object vehicle3 = new Object();
         parkingLotManagementSystem.setTotalSlots(5);
         parkingLotManagementSystem.toPark(vehicle);
         parkingLotManagementSystem.toPark(vehicle2);
@@ -156,16 +154,15 @@ public class ParkingLotSystemTest {
     @Test
     public void givenAParkingSlot_WhenGivenMultipleVehicles_MoreThanItsCapacity_ShouldThrowException() {
         parkingLotManagementSystem.setTotalSlots(2);
-        Object vehicle2=new Object();
-        Object vehicle3=new Object();
+        Object vehicle2 = new Object();
+        Object vehicle3 = new Object();
         parkingLotManagementSystem.toPark(vehicle);
         parkingLotManagementSystem.toPark(vehicle2);
         parkingLotManagementSystem.toPark(vehicle3);
         try {
             parkingLotManagementSystem.checkIfParked();
         } catch (ParkingLotException e) {
-            Assert.assertEquals(ParkingLotException.ExceptionType.SLOTS_FULL,e.type);
+            Assert.assertEquals(ParkingLotException.ExceptionType.SLOTS_FULL, e.type);
         }
-
     }
 }
