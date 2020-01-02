@@ -77,4 +77,10 @@ public class ParkingLotSystem {
                 .forEach(slot -> unOccupiedSlotList.add(slot));
         return unOccupiedSlotList;
     }
+
+    public int findVehicleInParkingLot(Object vehicle) throws ParkingLotException {
+        if (this.vehicleList.contains(vehicle))
+            return vehicleList.indexOf(vehicle);
+        throw new ParkingLotException("VEHICHLE NOT FOUND",ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+    }
 }

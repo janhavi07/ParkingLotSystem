@@ -72,7 +72,7 @@ public class ParkingLotSystemTest {
         try {
             checkIfUnParked = parkingLotSystem.checkIfUnParked();
         } catch (ParkingLotException e) {
-            Assert.assertEquals(ParkingLotException.ExceptionType.NOT_UNPARKED,e.type);
+            Assert.assertEquals(ParkingLotException.ExceptionType.NOT_UNPARKED, e.type);
         }
     }
 
@@ -96,7 +96,8 @@ public class ParkingLotSystemTest {
             parkingLotSystem.checkIfParked(vehicle);
         } catch (ParkingLotException e) {
             boolean checkIfFull = parkingLotOwner.checkAvailability();
-            Assert.assertTrue(checkIfFull);        }
+            Assert.assertTrue(checkIfFull);
+        }
     }
 
     @Test
@@ -210,6 +211,31 @@ public class ParkingLotSystemTest {
             parkingLotSystem.checkIfParked(vehicle2);
         } catch (ParkingLotException e) {
             Assert.assertEquals(ParkingLotException.ExceptionType.SLOTS_FULL, e.type);
+        }
+    }
+
+    @Test
+    public void givenAParkingLot_DriverWantToFindHisVehicle_ShouldReturnCorrectParkedSlot() {
+        parkingLotSystem.setTotalSlots(2);
+        parkingLotSystem.initializeSlots();
+        ArrayList<Integer> availableSlots = parkingLotSystem.getAvailableSlots();
+        try {
+            parkingLotSystem.toPark(availableSlots.get(0), vehicle);
+            int slotNumberOfParkedVehicle = parkingLotSystem.findVehicleInParkingLot(vehicle);
+            Assert.assertEquals(0, slotNumberOfParkedVehicle);
+        } catch (ParkingLotException e) {
+        }
+    }
+
+    @Test
+    public void givenAParkingLot_DriverWantToFindUnParkedVehicle_ShouldReturnException() {
+        parkingLotSystem.setTotalSlots(2);
+        parkingLotSystem.initializeSlots();
+        parkingLotSystem.getAvailableSlots();
+        try {
+            parkingLotSystem.findVehicleInParkingLot(vehicle);
+        } catch (ParkingLotException e) {
+            Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, e.type);
         }
     }
 }

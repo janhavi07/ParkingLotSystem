@@ -9,7 +9,9 @@ public class ParkingLotException extends Exception {
     }
 
     enum ExceptionType {
-       NOT_PARKED,NOT_UNPARKED,
-        SLOTS_FULL;
+        NOT_PARKED,
+        NOT_UNPARKED,
+        SLOTS_FULL,
+        VEHICLE_NOT_FOUND;
     }
 }
