@@ -54,12 +54,7 @@ public class ParkingLotSystem {
     public boolean checkIfParked(Object vehicle) throws ParkingLotException {
         if (this.vehicleList.contains(vehicle))
             return true;
-        if (!this.vehicleList.contains(null)) {
-            for (ParkingLotObserver observer : observerList)
-                observer.slotsAreFull();
-            throw new ParkingLotException("Could'nt park", ParkingLotException.ExceptionType.SLOTS_FULL);
-        }
-        return false;
+        throw new ParkingLotException("Vehicle Not Parked!!!!!", ParkingLotException.ExceptionType.NOT_PARKED);
     }
 
     public boolean checkIfUnParked() throws ParkingLotException {
@@ -81,6 +76,6 @@ public class ParkingLotSystem {
     public int findVehicleInParkingLot(Object vehicle) throws ParkingLotException {
         if (this.vehicleList.contains(vehicle))
             return vehicleList.indexOf(vehicle);
-        throw new ParkingLotException("VEHICHLE NOT FOUND",ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+        throw new ParkingLotException("VEHICHLE NOT FOUND", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
     }
 }

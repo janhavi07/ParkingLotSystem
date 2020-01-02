@@ -51,6 +51,17 @@ public class ParkingLotSystemTest {
     }
 
     @Test
+    public void givenAParkingLot_VehicleCouldNotParked_SHouldThrowException() {
+        parkingLotSystem.toPark(vehicle);
+        boolean checkIfParked = false;
+        try {
+            checkIfParked = parkingLotSystem.checkIfParked(vehicle2);
+        } catch (ParkingLotException e) {
+            Assert.assertEquals(ParkingLotException.ExceptionType.NOT_PARKED, e.type);
+        }
+    }
+
+    @Test
     public void givenAVehicle_WantToUnpark_ShouldReturnTrue() {
 
         parkingLotSystem.toPark(vehicle);
@@ -211,6 +222,26 @@ public class ParkingLotSystemTest {
             parkingLotSystem.checkIfParked(vehicle2);
         } catch (ParkingLotException e) {
             Assert.assertEquals(ParkingLotException.ExceptionType.SLOTS_FULL, e.type);
+        }
+    }
+
+    @Test
+    public void givenAParkingLot_WhenSlotsAreFullShouldInformObservers() {
+        Object vehicle2 = new Object();
+        Object vehicle1 = new Object();
+        parkingLotSystem.setTotalSlots(1);
+        parkingLotSystem.initializeSlots();
+        parkingLotSystem.registerObserver(parkingLotOwner);
+        parkingLotSystem.registerObserver(securityPerson);
+        ArrayList<Integer> availableSlots = parkingLotSystem.getAvailableSlots();
+        try {
+            parkingLotSystem.toPark(availableSlots.get(0), vehicle);
+            parkingLotSystem.toPark(availableSlots.get(1), vehicle1);
+            parkingLotSystem.toPark(availableSlots.get(2), vehicle2);
+        } catch (ParkingLotException e) {
+            boolean availability = parkingLotOwner.checkAvailability();
+            boolean availability1 = securityPerson.checkAvailability();
+            Assert.assertTrue(availability && availability1);
         }
     }
 
