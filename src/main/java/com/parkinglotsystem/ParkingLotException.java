@@ -12,6 +12,7 @@ public class ParkingLotException extends Exception {
         NOT_PARKED,
         NOT_UNPARKED,
         SLOTS_FULL,
-        VEHICLE_NOT_FOUND;
+        VEHICLE_NOT_FOUND,
+        LOTS_FULL;
     }
 }
