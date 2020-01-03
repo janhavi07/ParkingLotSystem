@@ -101,8 +101,6 @@ public class ParkingLotTest {
         try {
             parkingLot.registerObserver(parkingLotOwner);
             parkingLot.toPark(vehicle);
-            parkingLot.toPark(vehicle2);
-            parkingLot.checkIfParked(vehicle);
         } catch (ParkingLotException e) {
             boolean checkIfFull = parkingLotOwner.checkAvailability();
             Assert.assertTrue(checkIfFull);
@@ -114,8 +112,6 @@ public class ParkingLotTest {
         try {
             parkingLot.registerObserver(securityPerson);
             parkingLot.toPark(vehicle);
-            parkingLot.toPark(vehicle2);
-            parkingLot.checkIfParked(vehicle2);
         } catch (ParkingLotException e) {
             boolean checkIfFull = securityPerson.checkAvailability();
             Assert.assertTrue(checkIfFull);
@@ -124,13 +120,18 @@ public class ParkingLotTest {
 
     @Test
     public void givenAParkingSlot_WhenFull_ShouldInformBothTheObservers() {
-        parkingLot.registerObserver(parkingLotOwner);
-        parkingLot.registerObserver(securityPerson);
+
+        parkingLot.setTotalSlots(2);
+        parkingLot.initializeSlots();
         try {
+            parkingLot.registerObserver(parkingLotOwner);
+            parkingLot.registerObserver(securityPerson);
             parkingLot.toPark(vehicle);
             parkingLot.toPark(vehicle2);
+            parkingLot.toPark(new Object());
             parkingLot.checkIfParked(vehicle2);
         } catch (ParkingLotException e) {
+            Assert.assertEquals(ParkingLotException.ExceptionType.SLOTS_FULL,e.type);
             boolean checkIfFull = securityPerson.checkAvailability();
             boolean checkIfFull1 = parkingLotOwner.checkAvailability();
             Assert.assertTrue(checkIfFull && checkIfFull1);
@@ -175,25 +176,20 @@ public class ParkingLotTest {
         parkingLot.setTotalSlots(2);
         parkingLot.initializeSlots();
         ArrayList<Integer> availableSlots = null;
-        try {
-            availableSlots = parkingLot.getAvailableSlots();
-            Assert.assertEquals(expectedSlot, availableSlots);
-        } catch (ParkingLotException e) {
-        }
+        availableSlots = parkingLot.getAvailableSlots();
+        Assert.assertEquals(expectedSlot, availableSlots);
+
     }
 
     @Test
     public void givenAParkingLot_AttendantWillParkTheVehicleInThe_AvailableSlot() {
         parkingLot.setTotalSlots(2);
         parkingLot.initializeSlots();
-        try {
-            ArrayList<Integer> availableSlots = parkingLot.getAvailableSlots();
-            parkingLot.toPark(availableSlots.get(0), vehicle);
-            boolean checkIfParked = parkingLot.checkIfParked(vehicle);
-            Assert.assertTrue(checkIfParked);
-        } catch (ParkingLotException e) {
-            e.printStackTrace();
-        }
+        ArrayList<Integer> availableSlots = parkingLot.getAvailableSlots();
+        parkingLot.toPark(availableSlots.get(0), vehicle);
+        boolean checkIfParked = parkingLot.checkIfParked(vehicle);
+        Assert.assertTrue(checkIfParked);
+
     }
 
     @Test
@@ -202,16 +198,13 @@ public class ParkingLotTest {
         Object vehicle1 = new Object();
         parkingLot.registerObserver(parkingLotOwner);
         parkingLot.registerObserver(securityPerson);
-        try {
-            ArrayList<Integer> availableSlotsToParkForVehicle1 = parkingLot.getAvailableSlots();
-            parkingLot.toPark(availableSlotsToParkForVehicle1.get(0), vehicle);
-            ArrayList<Integer> availableSlotsToParkForVehicle2 = parkingLot.getAvailableSlots();
-            parkingLot.toPark(availableSlotsToParkForVehicle2.get(0), vehicle1);
-        } catch (ParkingLotException e) {
-            boolean availability = parkingLotOwner.checkAvailability();
-            boolean availability1 = securityPerson.checkAvailability();
-            Assert.assertTrue(availability && availability1);
-        }
+        ArrayList<Integer> availableSlotsToParkForVehicle1 = parkingLot.getAvailableSlots();
+        parkingLot.toPark(availableSlotsToParkForVehicle1.get(0), vehicle);
+        parkingLot.getAvailableSlots();
+        boolean availability = parkingLotOwner.checkAvailability();
+        boolean availability1 = securityPerson.checkAvailability();
+        Assert.assertTrue(availability && availability1);
+
     }
 
     @Test

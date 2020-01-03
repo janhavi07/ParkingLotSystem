@@ -19,10 +19,10 @@ public class ParkingLotSystemTest {
     @Test
     public void givenMultipleParkingLots_ShouldParkAVehicleAnd_ReturnTheLotNumber() {
         try {
-            parkingLotSystem.parkVehicles(vehicle1);
-            parkingLotSystem.parkVehicles(vehicle2);
+            parkingLotSystem.parkVehicles(DRIVER_TYPE.NORMAL, vehicle1);
+            parkingLotSystem.parkVehicles(DRIVER_TYPE.HANDICAP, vehicle2);
             ParkingLot lotOfThisVehicle = parkingLotSystem.findLotOfParkedVehicle(vehicle2);
-            Assert.assertEquals(parkingLotSystem.parkingLots.get(1), lotOfThisVehicle);
+            Assert.assertEquals(parkingLotSystem.parkingLots.get(0), lotOfThisVehicle);
         } catch (ParkingLotException e) {
         }
     }
@@ -30,9 +30,21 @@ public class ParkingLotSystemTest {
     @Test
     public void givenMultipleParkingLots_WhenAVehicleIsNotParked_ShouldReturnNull() {
         try {
-            parkingLotSystem.parkVehicles(vehicle1);
+            parkingLotSystem.parkVehicles(DRIVER_TYPE.HANDICAP, vehicle1);
             ParkingLot lotOfParkedVehicle = parkingLotSystem.findLotOfParkedVehicle(vehicle2);
-            Assert.assertEquals(null,lotOfParkedVehicle);
+            Assert.assertEquals(null, lotOfParkedVehicle);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenAHandicapDriver_WhenParkedToNearestLocation_ShouldReturnNearestLot() {
+        try {
+            parkingLotSystem.parkVehicles(DRIVER_TYPE.NORMAL,vehicle2);
+            parkingLotSystem.parkVehicles(DRIVER_TYPE.HANDICAP, vehicle1);
+            ParkingLot lotOfParkedVehicle = parkingLotSystem.findLotOfParkedVehicle(vehicle1);
+            Assert.assertEquals(parkingLotSystem.parkingLots.get(0),lotOfParkedVehicle);
         } catch (ParkingLotException e) {
             e.printStackTrace();
         }

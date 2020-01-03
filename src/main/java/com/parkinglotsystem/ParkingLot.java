@@ -67,17 +67,24 @@ public class ParkingLot {
     }
 
 
-    public ArrayList<Integer> getAvailableSlots() throws ParkingLotException {
+    public ArrayList<Integer> getAvailableSlots() {
         ArrayList<Integer> unOccupiedSlotList = new ArrayList<>();
         IntStream.range(0, actualCapacity)
                 .filter(slot -> this.parkingSlots.get(slot).getVehicle() == null)
                 .forEach(slot -> unOccupiedSlotList.add(slot));
         if (unOccupiedSlotList.size() == 0) {
+            informObserversIfFull();
+        }
+        return unOccupiedSlotList;
+    }
+
+    private void informObserversIfFull() {
+        try {
             for (ParkingLotObserver observer : observerList)
                 observer.slotsAreFull();
             throw new ParkingLotException("SLOTS UNAVAILABLE", ExceptionType.SLOTS_FULL);
+        } catch (ParkingLotException e) {
         }
-        return unOccupiedSlotList;
     }
 
     public int findVehicleInParkingLot(Object vehicle) throws ParkingLotException {
@@ -90,6 +97,9 @@ public class ParkingLot {
 
     public void toPark(Object vehicle) throws ParkingLotException {
         ArrayList<Integer> availableSlots = getAvailableSlots();
+        if (availableSlots.size() == 0) {
+            throw new ParkingLotException("SLOTS FULL!!!!",ExceptionType.SLOTS_FULL);
+        }
         this.parkingSlots.get(availableSlots.get(0)).setVehicleAndInTime(vehicle);
         vehicleCount++;
     }

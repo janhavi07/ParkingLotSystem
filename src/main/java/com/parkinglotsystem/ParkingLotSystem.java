@@ -1,8 +1,6 @@
 package com.parkinglotsystem;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
@@ -18,15 +16,9 @@ public class ParkingLotSystem {
                 .forEach(lotNumber -> parkingLots.add(new ParkingLot(2)));
     }
 
-    public void parkVehicles(Object vehicle) throws ParkingLotException {
-        ParkingLot lot = getLot();
+    public void parkVehicles(DRIVER_TYPE driverType, Object vehicle) throws ParkingLotException {
+        ParkingLot lot = driverType.getLot(parkingLots);
         lot.toPark(vehicle);
-    }
-
-    private ParkingLot getLot() {
-        List<ParkingLot> tempLots = new ArrayList<>(this.parkingLots);
-        tempLots.sort(Comparator.comparing(lot -> lot.getNumberOfVehiclesParked()));
-        return tempLots.get(0);
     }
 
     public ParkingLot findLotOfParkedVehicle(Object vehicle) {
