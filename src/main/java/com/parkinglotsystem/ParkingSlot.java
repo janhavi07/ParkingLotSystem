@@ -1,22 +1,19 @@
 package com.parkinglotsystem;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Objects;
+import java.sql.Time;
 
 public class ParkingSlot {
     private  Object vehicle;
-    private LocalDateTime time;
+    private Time time;
     private int slotNumber;
+    private long milli = 123456789999l;
 
     public ParkingSlot(int slotNumber) {
         this.slotNumber = slotNumber;
     }
 
-    public ParkingSlot() {
-    }
 
-    public LocalDateTime getTime() {
+    public Time getTime() {
         return time;
     }
 
@@ -30,15 +27,6 @@ public class ParkingSlot {
 
     public void setVehicleAndInTime(Object vehicle) {
         this.vehicle = vehicle;
-        this.time = LocalDateTime.now();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ParkingSlot that = (ParkingSlot) o;
-        return Objects.equals(vehicle, that.vehicle) &&
-                Objects.equals(time, that.time);
+        this.time = new Time(milli);
     }
 }
