@@ -6,11 +6,12 @@ import org.junit.Test;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ParkingLotTest {
 
     ParkingLot parkingLot;
-    Object vehicle, vehicle2;
+    Vehicle vehicle, vehicle2;
     ParkingLotOwner parkingLotOwner;
     SecurityPerson securityPerson;
     ParkingLotObserver observer1;
@@ -20,8 +21,8 @@ public class ParkingLotTest {
     @Before
     public void setUp() throws Exception {
         parkingLot = new ParkingLot(1);
-        vehicle = new Object();
-        vehicle2 = new Object();
+        vehicle = new Vehicle("RED");
+        vehicle2 = new Vehicle("WHITE");
         parkingLotOwner = new ParkingLotOwner();
         securityPerson = new SecurityPerson();
         observer1 = new ParkingLotOwner();
@@ -128,7 +129,7 @@ public class ParkingLotTest {
             parkingLot.registerObserver(securityPerson);
             parkingLot.toPark(vehicle);
             parkingLot.toPark(vehicle2);
-            parkingLot.toPark(new Object());
+            parkingLot.toPark(new Vehicle("RED"));
             parkingLot.checkIfParked(vehicle2);
         } catch (ParkingLotException e) {
             Assert.assertEquals(ParkingLotException.ExceptionType.SLOTS_FULL,e.type);
@@ -156,8 +157,8 @@ public class ParkingLotTest {
     public void givenAParkingSlot_WhenGivenMultipleVehicles_MoreThanItsCapacity_ShouldThrowException() {
         parkingLot.setTotalSlots(2);
         parkingLot.initializeSlots();
-        Object vehicle2 = new Object();
-        Object vehicle3 = new Object();
+        Vehicle vehicle2 = new Vehicle("");
+        Vehicle vehicle3 = new Vehicle("");
         try {
             parkingLot.toPark(vehicle);
             parkingLot.toPark(vehicle2);
@@ -194,8 +195,8 @@ public class ParkingLotTest {
 
     @Test
     public void givenAParkingLot_WhenSlotsAreFullShouldInformObservers() {
-        Object vehicle2 = new Object();
-        Object vehicle1 = new Object();
+        Vehicle vehicle2 = new Vehicle("");
+        Vehicle vehicle1 = new Vehicle("");
         parkingLot.registerObserver(parkingLotOwner);
         parkingLot.registerObserver(securityPerson);
         ArrayList<Integer> availableSlotsToParkForVehicle1 = parkingLot.getAvailableSlots();
@@ -239,6 +240,22 @@ public class ParkingLotTest {
             parkingLot.toPark(vehicle);
             Time parkedTime = parkingLot.getParkedTime(vehicle);
             Assert.assertEquals(expectedTime, parkedTime);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenAParkingLot_WhenWhiteVehiclesAreParked_ReturnListOfWhiteVehicles() {
+        try {
+            List<Integer>expectedList =new ArrayList<>();
+            expectedList.add(1);
+            parkingLot.setTotalSlots(2);
+            parkingLot.initializeSlots();
+            parkingLot.toPark(vehicle);
+            parkingLot.toPark(vehicle2);
+            List<Integer> listOfWhiteVehicles = parkingLot.findListOfWhiteVehicles("WHITE");
+            Assert.assertEquals(expectedList.toString(),listOfWhiteVehicles.toString());
         } catch (ParkingLotException e) {
             e.printStackTrace();
         }

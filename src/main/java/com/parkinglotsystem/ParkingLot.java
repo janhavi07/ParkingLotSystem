@@ -3,7 +3,9 @@ package com.parkinglotsystem;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static com.parkinglotsystem.ParkingLotException.ExceptionType;
 
@@ -11,7 +13,7 @@ public class ParkingLot {
 
     public List<ParkingLotObserver> observerList;
     public int vehicleCount = 0;
-    private List<ParkingSlot> parkingSlots;
+    protected List<ParkingSlot> parkingSlots;
     private int actualCapacity;
 
     public ParkingLot(int capacityOfParkingLot) {
@@ -20,6 +22,7 @@ public class ParkingLot {
         this.parkingSlots = new ArrayList();
         this.initializeSlots();
     }
+
 
     public void registerObserver(ParkingLotObserver observer) {
         observerList.add(observer);
@@ -34,12 +37,12 @@ public class ParkingLot {
                 .forEach(slotNumber -> parkingSlots.add(new ParkingSlot(slotNumber)));
     }
 
-    public void toPark(int slot, Object vehicle) {
+    public void toPark(int slot, Vehicle vehicle) {
         this.parkingSlots.get(slot).setVehicleAndInTime(vehicle);
         vehicleCount++;
     }
 
-    public void toUnpark(Object vehicle) throws ParkingLotException {
+    public void toUnpark(Vehicle vehicle) throws ParkingLotException {
         ParkingSlot parkingSlot = this.parkingSlots.stream()
                 .filter(slot -> vehicle.equals(slot.getVehicle()))
                 .findFirst()
@@ -50,13 +53,13 @@ public class ParkingLot {
         vehicleCount--;
     }
 
-    public boolean checkIfParked(Object vehicle) {
+    public boolean checkIfParked(Vehicle vehicle) {
         boolean parked = this.parkingSlots.stream()
                 .anyMatch(slot -> vehicle.equals(slot.getVehicle()));
         return parked;
     }
 
-    public boolean checkIfUnParked(Object vehicle) throws ParkingLotException {
+    public boolean checkIfUnParked(Vehicle vehicle) throws ParkingLotException {
         boolean present = this.parkingSlots.stream()
                 .filter(slot -> (vehicle) == slot.getVehicle())
                 .findFirst()
@@ -87,7 +90,7 @@ public class ParkingLot {
         }
     }
 
-    public int findVehicleInParkingLot(Object vehicle) throws ParkingLotException {
+    public int findVehicleInParkingLot(Vehicle vehicle) throws ParkingLotException {
         ParkingSlot parkingSlot = this.parkingSlots.stream()
                 .filter(slot -> slot.getVehicle() == vehicle)
                 .findFirst()
@@ -95,10 +98,10 @@ public class ParkingLot {
         return parkingSlot.getSlotNumber();
     }
 
-    public void toPark(Object vehicle) throws ParkingLotException {
+    public void toPark(Vehicle vehicle) throws ParkingLotException {
         ArrayList<Integer> availableSlots = getAvailableSlots();
         if (availableSlots.size() == 0) {
-            throw new ParkingLotException("SLOTS FULL!!!!",ExceptionType.SLOTS_FULL);
+            throw new ParkingLotException("SLOTS FULL!!!!", ExceptionType.SLOTS_FULL);
         }
         this.parkingSlots.get(availableSlots.get(0)).setVehicleAndInTime(vehicle);
         vehicleCount++;
@@ -108,11 +111,21 @@ public class ParkingLot {
         return this.vehicleCount;
     }
 
-    public Time getParkedTime(Object vehicle) {
+    public Time getParkedTime(Vehicle vehicle) {
         return this.parkingSlots.stream()
                 .filter(slot -> slot.getVehicle().equals(vehicle))
                 .findFirst()
                 .get()
                 .getTime();
+    }
+
+
+    public List<Integer> findListOfWhiteVehicles(String color) {
+        List<Integer> whiteVehicleList = this.parkingSlots.stream()
+                .filter(parkingSlot -> parkingSlot.getVehicle() != null)
+                .filter(parkingSlot -> parkingSlot.getVehicle().getColor().equals(color))
+                .map(parkingSlot -> parkingSlot.getSlotNumber())
+                .collect(Collectors.toList());
+        return whiteVehicleList;
     }
 }
