@@ -42,7 +42,7 @@ public class ParkingLotSystem {
                 .map(lot -> lot.findListOfWhiteVehicles(color))
                 .collect(Collectors.toList());
         System.out.println(listOfLotsWithWhiteVehicles.toString());
-        return  listOfLotsWithWhiteVehicles;
+        return listOfLotsWithWhiteVehicles;
     }
 
     public void setMockObject(ParkingLot parkingLot, StrategyTypeFactory strategyTypeFactory,
@@ -51,5 +51,26 @@ public class ParkingLotSystem {
         this.strategyTypeFactory = strategyTypeFactory;
         this.normalDriver = driver;
         this.strategy = strategy;
+    }
+
+    public List<List<String>> getDetails(String vehicleColor, String vehicleName) {
+        List<List<String>> vehicleDetailsListInALot = this.parkingLots.stream()
+                .map(parkingLot1 -> (parkingLot1.getDetailsOfVehicle(vehicleColor, vehicleName)))
+                .collect(Collectors.toList());
+        return vehicleDetailsListInALot;
+    }
+
+    public List<List<String>> getDetailsOfBMWVehicles(String vehicleName) {
+        List<List<String>> listOfLotsContainsBMWVehicles = this.parkingLots.stream()
+                .map(parkingLot1 -> parkingLot1.getListOfBMWCars(vehicleName))
+                .collect(Collectors.toList());
+        return listOfLotsContainsBMWVehicles;
+    }
+
+    public List<List<Vehicle>> getListOfCarsParkedInLast30Min() {
+        List<List<Vehicle>> listOfCarsParkedInLast30Min = this.parkingLots.stream()
+                .map(parkingLot1 -> parkingLot1.getListOfCarsParkedInLast30Min())
+                .collect(Collectors.toList());
+        return listOfCarsParkedInLast30Min;
     }
 }

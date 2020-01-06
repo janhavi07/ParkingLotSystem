@@ -14,10 +14,10 @@ public class ParkingLotSystemTest {
 
     @Before
     public void setUp() throws Exception {
-        vehicle1 = new Vehicle("WHITE");
-        vehicle2 = new Vehicle("RED");
-        vehicle4 = new Vehicle("WHITE");
-        vehicle5 = new Vehicle("WHITE");
+        vehicle1 = new Vehicle("WHITE", "TOYOTA", "MH 09 5676", "Mangesh");
+        vehicle2 = new Vehicle("RED", "INOVA", "MH 09 5676", "Mangesh");
+        vehicle4 = new Vehicle("WHITE", "TOYOTA", "MH 09 5676", "Mangesh");
+        vehicle5 = new Vehicle("WHITE", "TOYOTA", "MH 09 5676", "Mangesh");
         parkingLotSystem = new ParkingLotSystem(2, 2);
     }
 
@@ -138,4 +138,67 @@ public class ParkingLotSystemTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenAVehicleWithDetailsAndAttendantName_WhenWantToPark_ShouldParkAtCorrectSlot() {
+        try {
+            List<String> lot = new ArrayList<>();
+            lot.add("SlotNumber :0,attendantName='7894', numberPlate='MH 09 5676', vehicleName='TOYOTA', color='BLUE");
+            vehicle1 = new Vehicle("BLUE", "TOYOTA", "MH 09 5676", "7894");
+            vehicle2 = new Vehicle("YELLOW", "INOVA", "MH 09 1996", "123");
+            Vehicle vehicle3 = new Vehicle("WHITE", "TOYOTA", "MH 098 130 ", "abc");
+            Vehicle vehicle4 = new Vehicle("WHITE", "TOYOTA", "MH 00 5676", "mmv");
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle1);
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle2);
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle3);
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle4);
+            List<List<String>> details = parkingLotSystem.getDetails("BLUE", "TOYOTA");
+            System.out.println(details.toString());
+            Assert.assertEquals(lot, details.get(0));
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenABMWVehicles_WhenPoliceDepartmentWwantToKnowLocation_ShouldReturnListOfCorrectSlot() {
+        try {
+            List<String> lot = new ArrayList<>();
+            lot.add("SlotNumber :0,attendantName='7894', numberPlate='MH 09 5676', vehicleName='BMW', color='BLUE");
+            vehicle1 = new Vehicle("BLUE", "BMW", "MH 09 5676", "7894");
+            vehicle2 = new Vehicle("YELLOW", "INOVA", "MH 09 1996", "123");
+            Vehicle vehicle3 = new Vehicle("WHITE", "TOYOTA", "MH 098 130 ", "abc");
+            Vehicle vehicle4 = new Vehicle("WHITE", "TOYOTA", "MH 00 5676", "mmv");
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle1);
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle2);
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle3);
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle4);
+            List<List<String>> details = parkingLotSystem.getDetailsOfBMWVehicles("BMW");
+            System.out.println(details.toString());
+            Assert.assertEquals(lot, details.get(0));
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenAParkingLotSystem_WhenPoliceDepartmentWwantToKnowAllCarsParkedInLast30Min_ShouldReturnListOfCars() {
+        try {
+            List<String> lot = new ArrayList<>();
+            lot.add("attendantName='7894', numberPlate='MH 09 5676', vehicleName='BMW', color='BLUE, attendantName='abc', numberPlate='MH 098 130 ', vehicleName='TOYOTA', color='WHITE");
+            vehicle1 = new Vehicle("BLUE", "BMW", "MH 09 5676", "7894");
+            vehicle2 = new Vehicle("YELLOW", "INOVA", "MH 09 1996", "123");
+            Vehicle vehicle3 = new Vehicle("WHITE", "TOYOTA", "MH 098 130 ", "abc");
+            Vehicle vehicle4 = new Vehicle("WHITE", "TOYOTA", "MH 00 5676", "mmv");
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle1);
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle2);
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle3);
+            parkingLotSystem.parkVehicles(DriverType.NORMAL, vehicle4);
+            List<List<Vehicle>> details = parkingLotSystem.getListOfCarsParkedInLast30Min();
+            Assert.assertEquals(lot.toString(), details.get(0).toString());
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

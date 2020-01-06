@@ -1,6 +1,6 @@
 package com.parkinglotsystem;
 
-import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +22,6 @@ public class ParkingLot {
         this.parkingSlots = new ArrayList();
         this.initializeSlots();
     }
-
 
     public void registerObserver(ParkingLotObserver observer) {
         observerList.add(observer);
@@ -104,6 +103,7 @@ public class ParkingLot {
             throw new ParkingLotException("SLOTS FULL!!!!", ExceptionType.SLOTS_FULL);
         }
         this.parkingSlots.get(availableSlots.get(0)).setVehicleAndInTime(vehicle);
+        this.parkingSlots.get(availableSlots.get(0)).setSlotNumber(availableSlots.get(0));
         vehicleCount++;
     }
 
@@ -111,7 +111,7 @@ public class ParkingLot {
         return this.vehicleCount;
     }
 
-    public Time getParkedTime(Vehicle vehicle) {
+    public LocalDateTime getParkedTime(Vehicle vehicle) {
         return this.parkingSlots.stream()
                 .filter(slot -> slot.getVehicle().equals(vehicle))
                 .findFirst()
@@ -119,13 +119,45 @@ public class ParkingLot {
                 .getTime();
     }
 
+    private Stream getVehicleColorStream(String colorOfVehicle) {
+        Stream<ParkingSlot> parkingSlotStream = this.parkingSlots.stream()
+                .filter(parkingSlot -> parkingSlot.getVehicle() != null)
+                .filter(parkingSlot -> parkingSlot.getVehicle().getColor().equals(colorOfVehicle));
+        return parkingSlotStream;
+    }
 
     public List<Integer> findListOfWhiteVehicles(String color) {
-        List<Integer> whiteVehicleList = this.parkingSlots.stream()
-                .filter(parkingSlot -> parkingSlot.getVehicle() != null)
-                .filter(parkingSlot -> parkingSlot.getVehicle().getColor().equals(color))
+        Stream<ParkingSlot> colorStream = getVehicleColorStream(color);
+        List<Integer> whiteVehicleList = colorStream
                 .map(parkingSlot -> parkingSlot.getSlotNumber())
                 .collect(Collectors.toList());
         return whiteVehicleList;
+    }
+
+    public List<String> getDetailsOfVehicle(String colorOfVehicle, String vehicleName) {
+        Stream<ParkingSlot> colorStream = getVehicleColorStream(colorOfVehicle);
+        List<String> listOfVehicleDetails = colorStream
+                .filter(parkingSlot -> parkingSlot.getVehicle().getVehicleName().equals(vehicleName))
+                .map(parkingSlot -> ("SlotNumber :" + parkingSlot.getSlotNumber() + "," + parkingSlot.vehicle.toString()))
+                .collect(Collectors.toList());
+        return listOfVehicleDetails;
+    }
+
+    public List<String> getListOfBMWCars(String carType) {
+        List<String> listOfBMWvehicles = this.parkingSlots.stream()
+                .filter(slot -> carType.equalsIgnoreCase(slot.vehicle.getVehicleName()))
+                .map(parkingSlot -> ("SlotNumber :" + parkingSlot.getSlotNumber() + "," + parkingSlot.vehicle.toString()))
+                .collect(Collectors.toList());
+        return listOfBMWvehicles;
+
+    }
+
+    public List<Vehicle> getListOfCarsParkedInLast30Min() {
+        List<Vehicle> listOfCarsParkedInLast30Min = this.parkingSlots.stream()
+                .filter(slot -> slot.getVehicle()!=null)
+                .filter(slot -> slot.getTime().getMinute() <= 30 && slot.getTime().getMinute() > 0)
+                .map(slot -> slot.getVehicle())
+                .collect(Collectors.toList());
+        return listOfCarsParkedInLast30Min;
     }
 }

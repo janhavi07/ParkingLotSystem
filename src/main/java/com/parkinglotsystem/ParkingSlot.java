@@ -1,10 +1,10 @@
 package com.parkinglotsystem;
 
-import java.sql.Time;
+import java.time.LocalDateTime;
 
 public class ParkingSlot {
     public Vehicle vehicle;
-    private Time time;
+    private LocalDateTime time;
     private int slotNumber;
     private long milli = 123456789999l;
 
@@ -13,7 +13,7 @@ public class ParkingSlot {
     }
 
 
-    public Time getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
@@ -25,9 +25,12 @@ public class ParkingSlot {
         return slotNumber;
     }
 
-    public void setVehicleAndInTime(Vehicle vehicle) {
-        this.vehicle = vehicle;
-        this.time = new Time(milli);
+    public void setSlotNumber(int slotNumber) {
+        this.slotNumber = slotNumber;
     }
 
+    public void setVehicleAndInTime(Vehicle vehicle) {
+        this.vehicle = vehicle;
+        this.time = LocalDateTime.now();
+    }
 }
